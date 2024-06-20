@@ -13,6 +13,8 @@ namespace TaskManager
 {
 	public partial class MainForm : Form
 	{
+		readonly int ramFactor = 1024;
+		readonly string suffix = "kB";
 		Dictionary<int, Process> d_processes;
 		public MainForm()
 		{
@@ -27,12 +29,15 @@ namespace TaskManager
 			//LoadProcesses();
 			AddNewProcesses();
 			RemoveOldProcesses();
+			UpdateExistingProcesses();
 			statusStrip1.Items[0].Text = ($"количество  процессов: {listViewProcesses.Items.Count}");
 		}
 		void SetColumns()
 		{
 			listViewProcesses.Columns.Add("PID");
 			listViewProcesses.Columns.Add("Name");
+			listViewProcesses.Columns.Add("Working set");
+			listViewProcesses.Columns.Add("Peak working set");
 		}
 		void LoadProcesses()
 		{
@@ -48,10 +53,7 @@ namespace TaskManager
 			d_processes = Process.GetProcesses().ToDictionary(item => item.Id, item => item);
 			foreach (KeyValuePair<int, Process> i in d_processes)
 			{
-				ListViewItem item = new ListViewItem();
-				item.Text = i.Key.ToString();
-				item.SubItems.Add(i.Value.ProcessName);
-				listViewProcesses.Items.Add(item);
+				AddProcessToListView(i.Value);
 			}
 			//statusStrip1.Items[0].Text = ($"Количество процессов: {listViewProcesses.Items.Count}");
 		}
@@ -78,16 +80,34 @@ namespace TaskManager
 					listViewProcesses.Items.RemoveAt(i);
 			}
 		}
+		void UpdateExistingProcesses()
+		{
+			for(int i=0; i<listViewProcesses.Items.Count; i++)
+			{
+				int id = Convert.ToInt32(listViewProcesses.Items[i].Text);
+				//Process process = d_processes[id];
+				listViewProcesses.Items[i].SubItems[2].Text = $"{d_processes[id].WorkingSet64 / ramFactor} {suffix}";
+				listViewProcesses.Items[i].SubItems[3].Text = $"{d_processes[id].PeakWorkingSet64 / ramFactor} {suffix}";
+			}
+		}
 		void AddProcessToListView(Process process)
 		{
+			
 			ListViewItem item = new ListViewItem();
 			item.Text = process.Id.ToString();
 			item.SubItems.Add(process.ProcessName);
+			item.SubItems.Add($"{process.WorkingSet64/ramFactor} {suffix}");
+			item.SubItems.Add($"{process.PeakWorkingSet64/ramFactor} {suffix}");
 			listViewProcesses.Items.Add(item);
 		}
 		void RemoveProcessFromListView(int pid)
 		{
 			listViewProcesses.Items.RemoveByKey(pid.ToString());
+		}
+
+		private void runToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }
