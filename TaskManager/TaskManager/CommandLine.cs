@@ -16,5 +16,14 @@ namespace TaskManager
 		{
 			InitializeComponent();
 		}
+
+		private void buttonOK_Click(object sender, EventArgs e)
+		{
+			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(comboBoxFilename.Text);
+			System.Diagnostics.Process process = new System.Diagnostics.Process();
+			process.StartInfo = startInfo;
+			process.Start();
+			this.Close();
+		}
 	}
 }
