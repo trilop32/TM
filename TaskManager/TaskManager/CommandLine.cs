@@ -40,17 +40,37 @@ namespace TaskManager
 
 		private void buttonOK_Click(object sender, EventArgs e)
 		{
-			string text = comboBoxFilename.Text;
-			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(text);
-			System.Diagnostics.Process process = new System.Diagnostics.Process();
-			process.StartInfo = startInfo;
-			process.Start();
-			//if(!comboBoxFilename.Items.Contains(comboBoxFilename.Text))
-			//	comboBoxFilename.Items.Insert(0, comboBoxFilename.Text);
-			comboBoxFilename.Items.Remove(text);
-			comboBoxFilename.Text = (text);
-			comboBoxFilename.Items.Insert(0, text);
-			this.Close();
+			try
+			{
+				string text = comboBoxFilename.Text;
+				System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(text);
+				System.Diagnostics.Process process = new System.Diagnostics.Process();
+				process.StartInfo = startInfo;
+				process.Start();
+				//if(!comboBoxFilename.Items.Contains(comboBoxFilename.Text))
+				//	comboBoxFilename.Items.Insert(0, comboBoxFilename.Text);
+				comboBoxFilename.Items.Remove(text);
+				comboBoxFilename.Text = (text);
+				comboBoxFilename.Items.Insert(0, text);
+				this.Close();
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+
+		private void comboBoxFilename_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (e.KeyChar == (char)Keys.Enter)
+			{
+				buttonOK_Click(sender, e);
+			}
+		}
+
+		private void CommandLine_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			comboBoxFilename.Focus();
 		}
 	}
 }
