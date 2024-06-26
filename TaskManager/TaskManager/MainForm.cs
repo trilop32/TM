@@ -135,7 +135,7 @@ namespace TaskMenager
                 listViewProcesses.ListViewItemSorter = new ListViewItemComparer(_sortColumn, _ascending);
             }
         }
-        public class ListViewItemComparer : IComparer
+        public class ListViewItemComparer : IComparer//реализуем интерфейс IComparer
         {
             private int _column;
             private bool _ascending;
@@ -195,6 +195,11 @@ namespace TaskMenager
             sw.Close();
         }
 
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //MessageBox.Show(this, listViewProcesses.SelectedItems[0].Text, "Selected PID", MessageBoxButtons.OK);
+            d_processes[Convert.ToInt32(listViewProcesses.SelectedItems[0].Text)].Kill();
+        }
     }
 }
 //System.Diagnostics.Process[] processes = System.Diagnostics.Process.GetProcesses();//все запущенные процессы

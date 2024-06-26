@@ -74,7 +74,6 @@
             this.comboBoxFileName.Size = new System.Drawing.Size(237, 21);
             this.comboBoxFileName.TabIndex = 4;
             this.comboBoxFileName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxFileName_KeyDown);
-            this.comboBoxFileName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxFileName_KeyUp);
             // 
             // pictureBox
             // 
@@ -99,9 +98,11 @@
             this.Controls.Add(this.buttonOK);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "CommandLine";
             this.Text = "Run";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CommandLine_FormClosing);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CommandLine_KeyPress);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
 

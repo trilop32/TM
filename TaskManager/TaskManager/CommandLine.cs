@@ -79,7 +79,7 @@ namespace TaskMenager
                 string item = sr.ReadLine();
                 comboBoxFileName.Items.Add(item);
             }
-            comboBoxFileName.Text = comboBoxFileName.Items[0].ToString();
+            //comboBoxFileName.Text = comboBoxFileName.Items[0].ToString();
             //}
         }
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -101,13 +101,17 @@ namespace TaskMenager
         }
         private void comboBoxFileName_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyValue == (char)Keys.Escape)
+            if (e.KeyValue == (char)Keys.Enter)
+            {
+                buttonOK_Click(sender,e);
+            }
+        }
+        private void CommandLine_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Escape)
             {
                 Close();
             }
-        }
-        private void comboBoxFileName_KeyUp(object sender, KeyEventArgs e)
-        {
         }
     }
 }
