@@ -117,7 +117,6 @@ namespace TaskMenager
             CommandLine cmd = new CommandLine();
             cmd.ShowDialog();
         }
-
         int _sortColumn = -1;
         bool _ascending = true;
         private void listViewProcesses_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -195,6 +194,7 @@ namespace TaskMenager
             }
             sw.Close();
         }
+
     }
 }
 //System.Diagnostics.Process[] processes = System.Diagnostics.Process.GetProcesses();//все запущенные процессы

@@ -62,17 +62,25 @@ namespace TaskMenager
         }
         private void LoadComboBoxData()
         {
-            if (File.Exists(DataFilePath))
+            //if (File.Exists(DataFilePath))
+            //{
+            //    using (StreamReader reader = new StreamReader(DataFilePath))
+            //    {
+            //        while (!reader.EndOfStream)
+            //        {
+            //            string item = reader.ReadLine();
+            //            comboBoxFileName.Items.Add(item);
+            //        }
+            //    }
+            StreamReader sr = new StreamReader(DataFilePath);
+
+            while (!sr.EndOfStream)
             {
-                using (StreamReader reader = new StreamReader(DataFilePath))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        comboBoxFileName.Items.Add(line);
-                    }
-                }
+                string item = sr.ReadLine();
+                comboBoxFileName.Items.Add(item);
             }
+            comboBoxFileName.Text = comboBoxFileName.Items[0].ToString();
+            //}
         }
         private void buttonCancel_Click(object sender, EventArgs e)
         {
@@ -81,23 +89,25 @@ namespace TaskMenager
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Все файлы (.)|.";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = openFileDialog.FileName;
                 comboBoxFileName.Text = filePath;
             }
         }
-        private void comboBoxFIleName_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                buttonOK_Click(sender, e);
-            }
-        }
         private void CommandLine_FormClosing(object sender, FormClosingEventArgs e)
         {
             comboBoxFileName.Focus();
+        }
+        private void comboBoxFileName_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == (char)Keys.Escape)
+            {
+                Close();
+            }
+        }
+        private void comboBoxFileName_KeyUp(object sender, KeyEventArgs e)
+        {
         }
     }
 }

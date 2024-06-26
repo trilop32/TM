@@ -73,7 +73,8 @@
             this.comboBoxFileName.Name = "comboBoxFileName";
             this.comboBoxFileName.Size = new System.Drawing.Size(237, 21);
             this.comboBoxFileName.TabIndex = 4;
-            this.comboBoxFileName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.comboBoxFIleName_KeyPress);
+            this.comboBoxFileName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxFileName_KeyDown);
+            this.comboBoxFileName.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxFileName_KeyUp);
             // 
             // pictureBox
             // 
