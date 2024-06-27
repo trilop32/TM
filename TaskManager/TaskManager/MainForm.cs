@@ -149,8 +149,8 @@ namespace TaskMenager
                 string valueY = itemY.SubItems[_column].Text;
                 if (_column == 2 || _column == 3)
                 {
-                    int numX = ExtractNumber(valueX);
-                    int numY = ExtractNumber(valueY);
+                    int numX = Numbererer(valueX);
+                    int numY = Numbererer(valueY);
                     if (_ascending)
                     {
                         return numY.CompareTo(numX);
@@ -186,21 +186,12 @@ namespace TaskMenager
                     }
                 }
             }
-            private int ExtractNumber(string text)
+            private int Numbererer(string text)
             {
                 //Извлечение числа из строки, игнорируем текст после него
                 string numberStr = text.Split(' ')[0];
                 return int.Parse(numberStr);
             }
-        }
-        
-        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            //string filePath = "combobox_data.txt";
-            //if (File.Exists(filePath))
-            //{
-            //    File.WriteAllText(filePath, string.Empty);
-            //}
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {

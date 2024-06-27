@@ -34,7 +34,7 @@ namespace TaskMenager
             try
             {
                 string newText = comboBoxFileName.Text;
-                if (!comboBoxFileName.Items.Contains(newText)) // Проверка на дубликат
+                if (!comboBoxFileName.Items.Contains(newText))//Проверка на дубликат
                 {
                     comboBoxFileName.Items.Insert(0, newText);
                     SaveComboBoxData();
@@ -52,7 +52,7 @@ namespace TaskMenager
         private void SaveComboBoxData()
         {
             StreamWriter sw = new StreamWriter(DataFilePath);
-            // Сохраняем все элементы в обратном порядке, чтобы при загрузке они были в нужном порядке
+            //Сохраняем все элементы в обратном порядке, чтобы при загрузке они были в нужном порядке
             for (int i = comboBoxFileName.Items.Count - 1; i >= 0; i--)
             {
                 sw.WriteLine(comboBoxFileName.Items[i]);
@@ -63,11 +63,10 @@ namespace TaskMenager
         {
             try
             {
-                StreamReader sr = new StreamReader(DataFilePath);
+                StreamReader sr = new StreamReader("combobox_data.txt");
                 while (!sr.EndOfStream)
                 {
                     string item = sr.ReadLine();
-                    // Добавляем элементы в начало списка
                     comboBoxFileName.Items.Insert(0, item);
                 }
                 sr.Close();
