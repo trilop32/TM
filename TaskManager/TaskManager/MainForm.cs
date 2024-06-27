@@ -121,39 +121,36 @@ namespace TaskMenager
         bool _ascending = true;
         private void listViewProcesses_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            if (e.Column == 0 || e.Column == 1)
+            if (e.Column == _sortColumn)
             {
-                if (e.Column == _sortColumn)
-                {
-                    _ascending = !_ascending;
-                }
-                else
-                {
-                    _sortColumn = e.Column;
-                    _ascending = true;
-                }
-                listViewProcesses.ListViewItemSorter = new ListViewItemComparer(_sortColumn, _ascending);
+                _ascending = !_ascending;
             }
+            else
+            {
+                _sortColumn = e.Column;
+                _ascending = true;
+            }
+            listViewProcesses.ListViewItemSorter = new ListViewItemComparer(_sortColumn, _ascending);
         }
         public class ListViewItemComparer : IComparer//реализуем интерфейс IComparer
         {
             private int _column;
             private bool _ascending;
-
             public ListViewItemComparer(int column, bool ascending)
             {
                 _column = column;
                 _ascending = ascending;
             }
-
             public int Compare(object x, object y)
             {
                 ListViewItem itemX = (ListViewItem)x;
                 ListViewItem itemY = (ListViewItem)y;
                 string valueX = itemX.SubItems[_column].Text;
                 string valueY = itemY.SubItems[_column].Text;
-                if (int.TryParse(valueX, out int numX) && int.TryParse(valueY, out int numY))
+                if (_column == 2 || _column == 3)
                 {
+                    int numX = ExtractNumber(valueX);
+                    int numY = ExtractNumber(valueY);
                     if (_ascending)
                     {
                         return numY.CompareTo(numX);
@@ -165,17 +162,38 @@ namespace TaskMenager
                 }
                 else
                 {
-                    if (_ascending)
+                    if (int.TryParse(valueX, out int numX) && int.TryParse(valueY, out int numY))
                     {
-                        return valueY.CompareTo(valueX);
+                        if (_ascending)
+                        {
+                            return numY.CompareTo(numX);
+                        }
+                        else
+                        {
+                            return numX.CompareTo(numY);
+                        }
                     }
                     else
                     {
-                        return valueX.CompareTo(valueY);
+                        if (_ascending)
+                        {
+                            return valueY.CompareTo(valueX);
+                        }
+                        else
+                        {
+                            return valueX.CompareTo(valueY);
+                        }
                     }
                 }
             }
+            private int ExtractNumber(string text)
+            {
+                //Извлечение числа из строки, игнорируем текст после него
+                string numberStr = text.Split(' ')[0];
+                return int.Parse(numberStr);
+            }
         }
+        
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             //string filePath = "combobox_data.txt";

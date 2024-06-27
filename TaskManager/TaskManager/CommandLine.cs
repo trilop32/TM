@@ -8,79 +8,71 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TaskMenager
 {
     public partial class CommandLine : Form
     {
         private const string DataFilePath = "combobox_data.txt";
+        private ComboBox _comboBoxFileName;
         public ComboBox ComboBoxFileName
         {
             get
             {
-                return ComboBoxFileName;
+                return _comboBoxFileName;
             }
         }
         public CommandLine()
         {
             InitializeComponent();
             LoadComboBoxData();
+            _comboBoxFileName = this.comboBoxFileName;
         }
         private void buttonOK_Click(object sender, EventArgs e)
         {
             try
             {
                 string newText = comboBoxFileName.Text;
-                //if (!string.IsNullOrEmpty(newText))
-                //{
-                //    SaveComboBoxData();
-                //}
-                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(comboBoxFileName.Text);
+                if (!comboBoxFileName.Items.Contains(newText)) // Проверка на дубликат
+                {
+                    comboBoxFileName.Items.Insert(0, newText);
+                    SaveComboBoxData();
+                }
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo(newText);
                 System.Diagnostics.Process process = new System.Diagnostics.Process();
                 process.StartInfo = startInfo;
                 process.Start();
-                // comboBoxFIleName.Items.Insert(0,comboBoxFIleName.Text);
                 comboBoxFileName.Items.Remove(newText);
                 comboBoxFileName.Text = (newText);
-                comboBoxFileName.Items.Insert(0, newText);
                 this.Close();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
         private void SaveComboBoxData()
         {
-            using (StreamWriter writer = new StreamWriter(DataFilePath))
+            StreamWriter sw = new StreamWriter(DataFilePath);
+            // Сохраняем все элементы в обратном порядке, чтобы при загрузке они были в нужном порядке
+            for (int i = comboBoxFileName.Items.Count - 1; i >= 0; i--)
             {
-                foreach (string item in comboBoxFileName.Items)
-                {
-                    writer.WriteLine(item);
-                }
+                sw.WriteLine(comboBoxFileName.Items[i]);
             }
+            sw.Close();
         }
         private void LoadComboBoxData()
         {
-            //if (File.Exists(DataFilePath))
-            //{
-            //    using (StreamReader reader = new StreamReader(DataFilePath))
-            //    {
-            //        while (!reader.EndOfStream)
-            //        {
-            //            string item = reader.ReadLine();
-            //            comboBoxFileName.Items.Add(item);
-            //        }
-            //    }
-            StreamReader sr = new StreamReader(DataFilePath);
-
-            while (!sr.EndOfStream)
+            try
             {
-                string item = sr.ReadLine();
-                comboBoxFileName.Items.Add(item);
+                StreamReader sr = new StreamReader(DataFilePath);
+                while (!sr.EndOfStream)
+                {
+                    string item = sr.ReadLine();
+                    // Добавляем элементы в начало списка
+                    comboBoxFileName.Items.Insert(0, item);
+                }
+                sr.Close();
             }
-            //comboBoxFileName.Text = comboBoxFileName.Items[0].ToString();
-            //}
+            catch (Exception ex) { MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
         private void buttonCancel_Click(object sender, EventArgs e)
         {
@@ -89,6 +81,7 @@ namespace TaskMenager
         private void buttonBrowse_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 string filePath = openFileDialog.FileName;
